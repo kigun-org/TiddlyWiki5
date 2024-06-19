@@ -22,7 +22,10 @@ var ImageParser = function(type,text,options) {
 	if(options._canonical_uri) {
 		element.attributes.src = {type: "string", value: options._canonical_uri};
 	} else if(text) {
-		element.attributes.src = {type: "string", value: "data:application/pdf;base64," + text};
+		const array = Uint8Array.from(atob(text), c => c.charCodeAt(0));
+		const blob = new Blob([array], {type: 'application/pdf'});
+		const uri = URL.createObjectURL(blob);
+		element.attributes.src = {type: "string", value: uri};
 	}
 	this.tree = [element];
 	this.source = text;
